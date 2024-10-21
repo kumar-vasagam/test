@@ -1,0 +1,97 @@
+db.sales.find(
+    {"$and" : 
+    [{"customer.age" : {"$lt" : 30}, "customer.satisfaction" : {"$gt" : 3}}]},
+    {"customer.age" : 1, "customer.satisfaction" : 1, saleDate : 1, storeLocation:1, "_id" : 0}
+)
+
+db.sales.findOne(
+    {"customer.age" : {"$lt" : 30}, "customer.satisfaction" : {"$gt" : 3}},
+    {"customer.age" : 1, "customer.satisfaction" : 1, saleDate : 1, storeLocation:1, "_id" : 0}
+)
+db.sales.find({ "customer.age": { $lt: 30 }, "customer.satisfaction": { $gt: 3 }, }, { "customer.satisfaction": 1, "customer.age": 1, "storeLocation": 1, "saleDate": 1, "_id": 0, });
+
+db.sales.find(
+    {{storeLocation:"Seattle"}, {storeLocation:"New York"}},
+    {purchaseMethod: 0, couponUsed: 0, customer: 0}
+)
+
+db.sales.find(
+    {storeLocation: {$in : ["Seattle", "New York"]}},
+    {purchaseMethod: 0, couponUsed: 0, customer: 0}
+)
+
+db.sales.find({ storeLocation: { $in: ["Seattle", "New York"] }, }, { couponUsed: 0, purchaseMethod: 0, customer: 0, })
+
+db.sales.countDocuments(
+    {"items.name" : "laptop", price: {$lt: 600}}
+)
+
+db.sightings.aggregate([
+    {
+        $match: {"species_common" : "Eastern Bluebird"}
+    },
+    {
+        $group: {
+            _id : "location.coordinates",
+            number_of_sightings: { $count: {} }
+
+        }
+    }
+])
+
+    db.sightings.aggregate([
+    {
+        $sort: 'location.coordinates.1':-1
+    },
+    {
+        $limit:4
+    },
+    ])
+
+    db.sightings.aggregate([
+  {
+    $sort: {
+        'location.coordinates.1': -1
+    }
+  }, {
+    $limit: 4
+  }
+])
+
+db.sightings.aggregate([ {$match: {date : {$lt: ISODate('2023-0101')}}, {ISODate : {date: $gt('2021-12-31')}}}])
+
+db.sightings.aggregate([
+  {
+    $match: {
+      date: {
+        $gte: ISODate('2022-01-01T00:00:00.0Z'),
+        $lt: ISODate('2023-01-01T00:00:00.0Z')
+      }
+    }
+  }
+])
+
+const bookPipeline = [
+  {
+    $set:
+    {
+      docType: "book",
+      relatedTo: "$product_id",
+      book_id: "$product_id"
+    },
+  },
+    {
+      $unset: ["product_id"],
+    },
+    {
+      $merge: 
+      {
+        into: "books_catalog_ce7ec42a",
+        on: "_id"
+      }
+    }
+]
+
+db.books_catalog_ce7ec42a.find({
+  "$in" : 
+  "relatedTo": "34538757"})
