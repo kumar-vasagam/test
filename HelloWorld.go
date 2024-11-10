@@ -31,8 +31,8 @@ func findSum() {
 	fmt.Printf("finalIndexStart %v and the final sum %v \n: ", finalIndexStart, newSum)
 }
 
-func reverseString() {
-	input := "I am a man'"
+func reverseString(input string) {
+	//input := "I am a man'"
 	//output := "man' a am I"
 	s := strings.Split(input, " ")
 	//outputA := make([]string, len(inputA), len(inputA))
@@ -41,12 +41,13 @@ func reverseString() {
 		s[i], s[j] = s[j], s[i]
 	}
 
-	fmt.Printf("Reversed? %v ", s)
+	fmt.Printf("Reversed? %q", s)
 }
 
 func main() {
 	result := add(3, 7)
 	fmt.Println(result)
 	findSum()
-	reverseString()
+	reverseString("I am a man'")
+	reverseString("Tom Weds Anne")
 }

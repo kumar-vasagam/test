@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"math"
 	"slices"
+	"strconv"
+	"strings"
+	"unicode"
 )
 
 func main() {
@@ -24,6 +27,41 @@ func main() {
 	getTotalX([]int32{2, 4}, []int32{16, 32, 96})
 	getTotalX([]int32{}, []int32{})
 	getTotalX([]int32{3, 9, 6}, []int32{36, 72})
+	fmt.Printf("The result : %v\n", searchInsert([]int{1, 3, 5, 6}, 5))
+	fmt.Printf("The result : %v\n", searchInsert([]int{1, 3, 5, 6}, 2))
+	fmt.Printf("The result : %v\n", searchInsert([]int{1, 3, 5, 6}, 7))
+	generate(6)
+	fmt.Printf("singleNum %v \n", singleNumber([]int{2, 2, 1}))
+	fmt.Printf("singleNum %v \n", singleNumber([]int{4, 1, 2, 1, 2}))
+	fmt.Printf("singleNum %v \n", singleNumber([]int{4}))
+
+	fmt.Printf("pick Nums %v \n", pickingNumbers([]int32{1, 1, 2, 2, 4, 4, 5, 5, 5}))
+	fmt.Printf("pick Nums %v \n", pickingNumbers([]int32{4, 6, 5, 3, 3, 1}))
+	fmt.Printf("pick Nums %v \n", pickingNumbers([]int32{1, 2, 2, 3, 1, 2}))
+	fmt.Printf("Remove duple elements (2) %v \n", removeDuplicateElements([]int{0, 1, 1, 2}))
+	fmt.Printf("Remove duple elements (5) %v \n", removeDuplicateElements([]int{0, 0, 1, 1, 1, 2, 2, 3, 3, 4}))
+	fmt.Printf("Reversal %v \n ", reverseAString("Geeks"))
+	fmt.Printf("Reversal %v \n ", reverseAString("Geeks for Nerds"))
+
+	fmt.Printf("checkEqualArrays (T) %v \n ", checkEqualArrays([]int{1, 2, 5, 4, 0}, []int{2, 4, 5, 0, 1}))
+	fmt.Printf("checkEqualArrays (F) %v \n ", checkEqualArrays([]int{1, 2, 5}, []int{2, 4, 15}))
+	//fmt.Printf(" %v \n")
+	fmt.Printf(" findUnion (5) %v \n", findUnion([]int{1, 2, 3, 4, 5}, []int{1, 2, 3}))
+	fmt.Printf(" findUnion (7) %v \n", findUnion([]int{85, 25, 1, 32, 54, 6}, []int{85, 2}))
+	fmt.Printf(" findUnion (2) %v \n", findUnion([]int{1, 2, 1, 1, 2}, []int{2, 2, 1, 2, 1}))
+	fmt.Printf(" isSubset (T) %v \n", isSubset([]int{11, 7, 1, 13, 21, 3, 7, 3}, []int{11, 3, 7, 1, 7}))
+	fmt.Printf(" isSubset (T) %v \n", isSubset([]int{1, 2, 3, 4, 4, 5, 6}, []int{1, 2, 4}))
+	fmt.Printf(" isSubset (F) %v \n", isSubset([]int{10, 5, 2, 23, 19}, []int{19, 5, 3}))
+	fmt.Printf(" search 2 %v \n", search([]int{1, 2, 3, 4}, 3))
+	fmt.Printf(" search 4 %v \n", search([]int{10, 8, 30, 4, 5}, 5))
+	fmt.Printf(" search -1 %v \n", search([]int{10, 8, 30}, 6))
+
+	rotateAtIndex([]int{1, 2, 3, 4, 5}, 3)
+	rotateAtIndex([]int{5, 6, 8, 9}, 5)
+	climbingLeaderboard([]int32{100, 90, 90, 80}, []int32{70, 80, 105})
+	climbingLeaderboard([]int32{100, 100, 50, 40, 40, 20, 10}, []int32{5, 25, 50, 120})
+
+	fmt.Printf("b days %v \n", beautifulDays(20, 23, 6))
 
 }
 func sockMerchant(n int32, ar []int32) int32 {
@@ -235,4 +273,340 @@ func getTotalX(a []int32, b []int32) int32 {
 	fmt.Printf("count: %v\n", count)
 	return count
 
+}
+
+func searchInsert(nums []int, target int) int {
+	for i := 0; i < len(nums); i++ {
+		if target <= nums[i] {
+			return i
+		}
+	}
+	return len(nums)
+}
+func generate(numRows int) [][]int {
+	out := make([][]int, 0)
+	fmt.Printf("out: %v\n", out)
+	curRow := 1
+	for {
+		in := make([]int, 0)
+		fmt.Printf("in: %v\n", in)
+
+		for i := 0; i < curRow; i++ {
+			if i == 0 || i == curRow-1 {
+				in = append(in, 1)
+				continue
+			}
+			fmt.Printf("out: %v\n", out)
+			previous := out[len(out)-1][i] + out[len(out)-1][i-1]
+			fmt.Printf("first %v | second %v | result %v \n", out[len(out)-1][i], out[len(out)-1][i-1], previous)
+			in = append(in, previous)
+		}
+		out = append(out, in)
+		curRow++
+		if curRow > numRows {
+			break
+		}
+	}
+	fmt.Printf("out: %v\n", out)
+	return out
+}
+func singleNumber(nums []int) int {
+	items := make(map[int]int)
+	var single int
+	for _, item := range nums {
+		_, ok := items[item]
+		if ok {
+			items[item]++
+		} else {
+			items[item] = 1
+		}
+	}
+	for k, v := range items {
+		if v == 1 {
+			return k
+		}
+	}
+	return single
+}
+func pickingNumbers(a []int32) int32 {
+	// Write your code here
+	//Sort
+	var maxSize int32
+	//
+
+	slices.Sort(a)
+	b := make([]int32, 0)
+	for i := 0; i < len(a)-1; i++ {
+		if math.Abs(float64(a[i])-float64(a[i+1])) == 1 || math.Abs(float64(a[i])-float64(a[i+1])) == 0 {
+			//fmt.Printf("appending  %v \n ", a[i])
+			b = append(b, a[i])
+			if i == len(a)-2 {
+				b = append(b, a[i+1])
+			}
+		} else {
+			b = append(b, a[i])
+			if i == len(a)-2 {
+				b = append(b, a[i+1])
+			}
+			//fmt.Printf("b: %v\n", b)
+			b = b[:0]
+		}
+		if len(b) > int(maxSize) {
+			maxSize = int32(len(b))
+		}
+	}
+	return maxSize
+
+}
+func removeDuplicateElements(nums []int) int {
+	slices.Sort(nums)
+	var seen = nums[0]
+	i := 1
+
+	for j := 1; j < len(nums); j++ {
+		if nums[j] == seen {
+			continue
+		} else {
+			nums[i] = nums[j]
+			seen = nums[j]
+			i++
+		}
+	}
+	return i
+}
+func reverseAString(s string) string {
+	var sb strings.Builder
+
+	for i := len(s) - 1; i >= 0; i-- {
+		sb.WriteString(string(s[i]))
+	}
+
+	fmt.Printf("sb.String(): %v\n", sb.String())
+
+	return sb.String()
+
+}
+
+func checkEqualArrays(a1 []int, a2 []int) bool {
+	slices.Sort(a1)
+	slices.Sort(a2)
+	if len(a1) != len(a2) {
+		return false
+	}
+	for i := 0; i < len(a1); i++ {
+		if a1[i] != a2[i] {
+			return false
+		}
+	}
+	return true
+}
+func findUnion(a1 []int, a2 []int) int {
+	m := make(map[int]bool)
+	var count int
+
+	f := func(a []int) {
+		for _, v := range a {
+			_, ok := m[v]
+			if !ok {
+				m[v] = true
+				count++
+			}
+		}
+		fmt.Printf("m: %v\n", m)
+	}
+
+	f(a1)
+	f(a2)
+	fmt.Printf("count: %v\n", count)
+	return count
+}
+func isSubset(a1 []int, a2 []int) bool {
+	i1, i2, count := 0, 0, 0
+	slices.Sort(a1)
+	slices.Sort(a2)
+	for {
+		if a2[i2] == a1[i1] {
+			i1++
+			i2++
+			count++
+		} else {
+			i1++
+		}
+		if i2 == len(a2)-1 || i1 == len(a1)-1 {
+			break
+		}
+	}
+	if count == len(a2)-1 {
+		return true
+	}
+	return false
+}
+
+func search(a []int, x int) int {
+	count := -1
+	for i, v := range a {
+		if v == x {
+			count = i
+			break
+		}
+	}
+	return count
+
+}
+
+func rotateAtIndex(a []int, k int) {
+	fmt.Printf("a BEFORE : %v\n", a)
+	x := k / 2
+	if k >= len(a) {
+		x = len(a) / 2
+		k = len(a)
+	}
+	j := 0
+	for i := k - 1; i >= x; i-- {
+		a[i], a[j] = a[j], a[i]
+		j++
+	}
+	fmt.Printf("a AFTER: %v\n", a)
+}
+
+type position struct {
+	score int32
+	rank  int
+}
+
+func climbingLeaderboard(ranked []int32, player []int32) []int32 {
+	// Write your code here
+	output := make([]int32, 0)
+	clearRanks := make([]int32, 0)
+	for i, v := range ranked {
+		if i == 0 || v != ranked[i-1] {
+			clearRanks = append(clearRanks, v)
+		}
+	}
+	fmt.Printf("clearRanks: %v\n", clearRanks)
+	for i := 0; i < len(player); i++ {
+		for j := 0; j < len(clearRanks); j++ {
+			if player[i] == clearRanks[j] {
+				output = append(output, int32(j)+1)
+				break
+			}
+			if player[i] > clearRanks[j] {
+				output = append(output, int32(j)+1)
+				//Need to insert player[i] into ranked slice at jth location
+				slices.Insert(clearRanks, j, player[i])
+				//clearRanks = append(clearRanks, player[i])
+				//slices.Sort(clearRanks)
+				fmt.Printf("inserted %v at %v into clearRanks: %v\n", player[i], j, clearRanks)
+				break
+			}
+			if player[i] < clearRanks[j] && j == len(clearRanks)-1 {
+				clearRanks = append(clearRanks, player[i])
+				output = append(output, int32(len(clearRanks)))
+				break
+			}
+		}
+		//fmt.Printf("output after each player : %v\n", output)
+	}
+	fmt.Printf("output--->>>> : %v\n", output)
+	return output
+}
+
+func camelcase(s string) int32 {
+	// Write your code here
+	words := 1
+	for _, v := range s {
+		if unicode.IsUpper(v) {
+			words++
+		}
+	}
+	return int32(words)
+}
+func hurdleRace(k int32, height []int32) int32 {
+	// Write your code here
+	max := 0
+	for _, v := range height {
+		if v > int32(max) {
+			max = int(v)
+		}
+	}
+	if k > int32(max) {
+		return 0
+	}
+	return int32(max) - k
+}
+
+const alpha = "abcdefghijklmnopqrstuvwxyz"
+
+func designerPdfViewer(h []int32, word string) int32 {
+	// Write your code here
+	l := len(word)
+	tall := 0
+	for _, w := range word {
+		low := strings.ToLower(string(w))
+		i := strings.Index(alpha, low)
+		if h[i] > int32(tall) {
+			tall = int(h[i])
+		}
+	}
+	area := tall * l
+	return int32(area)
+
+}
+
+func utopianTree(n int32) int32 {
+	// Write your code here
+	var height int32 = 1
+	var x int32 = 0
+	for {
+		if x == n {
+			break
+		}
+		x++
+		if x%2 != 0 {
+			//Odd -> double
+			height = height * 2
+		} else {
+			//Even. Increment
+			height++
+		}
+	}
+	return height
+
+}
+
+func angryProfessor(k int32, a []int32) string {
+	// Write your code here
+	var threshold int32 = 0
+	for _, v := range a {
+		if v <= 0 {
+			threshold++
+		}
+	}
+	if threshold >= k {
+		return "NO"
+	}
+	return "YES"
+}
+func beautifulDays(i int32, j int32, k int32) int32 {
+	// Write your code here
+	var bdays int32 = 0
+
+	for x := i; x <= j; x++ {
+		ri := strconv.Itoa(int(x))
+		mult := 1
+		var revi = 0
+		for z := len(ri) - 1; z >= 0; z-- {
+			basn := string(ri[z])
+			zz, _ := strconv.Atoi(basn)
+			revi += zz * mult
+			mult *= 10
+		}
+		diff := x - int32(revi)
+		fmt.Printf("i %v reversed i %v diff %v \n", x, revi, diff)
+		if diff%k == 0 {
+			bdays++
+		}
+	}
+
+	return bdays
 }

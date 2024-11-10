@@ -319,7 +319,7 @@ func bonAppetit(bill []int32, k int32, b int32) {
 	if eachContrib == b {
 		fmt.Println("Bon Appetit")
 	} else {
-		refund := (actualBill+bill[k])/2 - b
+		refund := (actualBill)/2 - b
 		refund64 := math.Abs(float64(refund))
 		fmt.Printf("refund: %v\n", refund64)
 	}

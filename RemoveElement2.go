@@ -16,7 +16,7 @@ func removeElement(nums []int, val int) int {
 		if nums[i] == val {
 			if nums[j] == val {
 				j--
-
+				
 			} else {
 				//Swap it to the last position
 			}
