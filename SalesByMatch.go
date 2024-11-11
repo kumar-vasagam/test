@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"math"
 	"slices"
-	"strconv"
 	"strings"
 	"unicode"
 )
@@ -60,8 +59,6 @@ func main() {
 	rotateAtIndex([]int{5, 6, 8, 9}, 5)
 	climbingLeaderboard([]int32{100, 90, 90, 80}, []int32{70, 80, 105})
 	climbingLeaderboard([]int32{100, 100, 50, 40, 40, 20, 10}, []int32{5, 25, 50, 120})
-
-	fmt.Printf("b days %v \n", beautifulDays(20, 23, 6))
 
 }
 func sockMerchant(n int32, ar []int32) int32 {
@@ -587,26 +584,24 @@ func angryProfessor(k int32, a []int32) string {
 	}
 	return "YES"
 }
-func beautifulDays(i int32, j int32, k int32) int32 {
-	// Write your code here
-	var bdays int32 = 0
 
-	for x := i; x <= j; x++ {
-		ri := strconv.Itoa(int(x))
-		mult := 1
-		var revi = 0
-		for z := len(ri) - 1; z >= 0; z-- {
-			basn := string(ri[z])
-			zz, _ := strconv.Atoi(basn)
-			revi += zz * mult
-			mult *= 10
-		}
-		diff := x - int32(revi)
-		fmt.Printf("i %v reversed i %v diff %v \n", x, revi, diff)
-		if diff%k == 0 {
-			bdays++
-		}
+func regularProfessor() {
+	p := func(i int) int {
+		return i * i
 	}
 
-	return bdays
+	x := p(4)
+	fmt.Printf("x: %v\n", x)
+
+}
+func viralAdvertising(n int32) int32 {
+	// Write your code here
+	var shared, liked, cum int32 = 5, 2, 2
+	for i := 2; i <= int(n); i++ {
+		shared = liked * 3
+		liked = shared / 2
+		cum = cum + liked
+	}
+	return cum
+
 }
