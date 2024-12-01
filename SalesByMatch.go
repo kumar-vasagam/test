@@ -59,6 +59,16 @@ func main() {
 	rotateAtIndex([]int{5, 6, 8, 9}, 5)
 	climbingLeaderboard([]int32{100, 90, 90, 80}, []int32{70, 80, 105})
 	climbingLeaderboard([]int32{100, 100, 50, 40, 40, 20, 10}, []int32{5, 25, 50, 120})
+	fmt.Printf("Want 3 | Got %v \n", saveThePrisoner(4, 6, 2))
+	fmt.Printf("Want 2 | Got %v \n", saveThePrisoner(5, 2, 1))
+	fmt.Printf("Want 3 | Got %v \n", saveThePrisoner(5, 2, 2))
+	fmt.Printf("Want 6 | Got %v \n", saveThePrisoner(7, 19, 2))
+	fmt.Printf("Want 3 | Got %v \n", saveThePrisoner(3, 7, 3))
+	fmt.Printf("Want ? | Got %v \n", saveThePrisoner(6, 737005495, 6))
+	fmt.Printf("Want ? | Got %v \n", saveThePrisoner(654809340, 204894365, 472730208))
+	fmt.Printf("Want ? | Got %v \n", saveThePrisoner(12, 430895283, 10))
+
+	circularArrayRotation([]int32{3, 4, 5}, 2, []int32{1, 2})
 
 }
 func sockMerchant(n int32, ar []int32) int32 {
@@ -604,4 +614,51 @@ func viralAdvertising(n int32) int32 {
 	}
 	return cum
 
+}
+func saveThePrisoner(n int32, m int32, s int32) int32 {
+	// Write your code here
+	// n = number of candies
+	//m/n = num of rotations
+	//m%n = where to stop
+	//s = starting point
+	var out int32 = 0
+	rotations := m / n
+	stop := m % n
+	start := s
+
+	if rotations == 0 {
+		out = start + m - 1
+	} else {
+		if start == 1 {
+			out = n
+		} else {
+			out = start - 1 + stop
+		}
+	}
+	if out > n {
+		out = out - n
+	}
+	return out
+}
+func circularArrayRotation(a []int32, k int32, queries []int32) []int32 {
+	// Write your code here
+	out := make([]int32, 0)
+	start := 0
+	rotated := make([]int32, 0)
+	if len(a)-int(k) > 0 {
+		start = len(a) - int(k)
+	} else {
+		start = len(a) - len(a)%int(k)
+	}
+	for i := start; i < len(a); i++ {
+		rotated = append(rotated, a[i])
+	}
+	for i := 0; i < start; i++ {
+		rotated = append(rotated, a[i])
+	}
+	for _, v := range queries {
+		out = append(out, rotated[v])
+	}
+	fmt.Printf("Queries out: %v\n", out)
+	return out
 }

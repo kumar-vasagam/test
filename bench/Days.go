@@ -37,18 +37,11 @@ func improvedBeautifulDays(i int32, j int32, k int32) int32 {
 	// Write your code here
 	var bdays int32 = 0
 	for x := i; x <= j; x++ {
-		mult := 1
 		var revi int32 = 0
-		original := strconv.Itoa(int(x))
-		var sb string
-		for t := len(original) - 1; t >= 0; t-- {
-			sb += string(original[t])
-		}
-		number, _ := strconv.Atoi(sb)
+		number := x
 		for {
 			tmp := number % 10
-			revi += int32(tmp) * int32(mult)
-			mult *= 10
+			revi = revi*10 + tmp
 			number /= 10
 			if number == 0 {
 				break
