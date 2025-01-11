@@ -70,6 +70,9 @@ func main() {
 
 	circularArrayRotation([]int32{3, 4, 5}, 2, []int32{1, 2})
 
+	fmt.Printf("Want 4 | Got %v \n", jumpingOnClouds([]int32{0, 0, 1, 0, 0, 1, 0}))
+	fmt.Printf("Want 3 | Got %v \n", jumpingOnClouds([]int32{0, 0, 0, 1, 0, 0}))
+
 }
 func sockMerchant(n int32, ar []int32) int32 {
 	// Write your code here
@@ -661,4 +664,24 @@ func circularArrayRotation(a []int32, k int32, queries []int32) []int32 {
 	}
 	fmt.Printf("Queries out: %v\n", out)
 	return out
+}
+func jumpingOnClouds(c []int32) int32 {
+	// Write your code here
+	var jumps = 0
+	curPosition := 0
+	for {
+
+		if curPosition+2 < len(c) && c[curPosition+2] == 0 {
+			curPosition += 2
+		} else {
+			curPosition++
+		}
+		jumps++
+		if curPosition >= len(c)-1 {
+			break
+		}
+	}
+
+	fmt.Printf("jumps: %v\n", jumps)
+	return int32(jumps)
 }
