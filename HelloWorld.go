@@ -174,12 +174,114 @@ func kaprekarNumbers(p int32, q int32) {
 	}
 
 }
+
+func ReverseStringAnotherWay(s string) string {
+	trimmed := strings.TrimSpace(s)
+	ss := strings.Split(trimmed, " ")
+	var sb strings.Builder
+	for i := len(ss) - 1; i >= 0; i-- {
+		t_item := strings.TrimSpace(ss[i])
+		if t_item != "" {
+			sb.WriteString(ss[i] + " ")
+		}
+	}
+	fmt.Printf(" \n Reversed ? %v \n", sb.String())
+	return strings.TrimSpace(sb.String())
+}
+func TwoDSlices() {
+	holder := make([][]int, 5)
+	fmt.Printf("len %v | cap %v | Holder %v \n", len(holder), cap(holder), holder)
+	fmt.Printf("Len of 0th %v \n", len(holder[0]))
+
+	subHolder := make([]int, 3)
+	holder[0] = append(holder[0], subHolder...)
+
+	fmt.Printf("Len of 0th after subHolder %v | Hodler %v \n", len(holder[0]), holder)
+
+	secondHolder := []int{0, 1, 2, 3, 4}
+	holder[1] = append(holder[1], secondHolder...)
+
+	fmt.Printf("Len of 1st after secondHolder %v | Hodler %v \n", len(holder[1]), holder)
+
+	fmt.Printf("Element at 1,2 : %v \n", holder[1][2])
+
+}
+func convert(s string, numRows int) string {
+	if numRows >= len(s) || numRows == 1 {
+		return s
+	}
+	holder := make([][]string, 0)
+	idx := numRows - 2
+	s1 := s[0:numRows]
+	temp := make([]string, numRows)
+	for i, s11 := range s1 {
+		temp[i] = string(s11)
+	}
+	cPos := numRows
+	//Init
+	holder = append(holder, temp)
+	for {
+		subHolder := make([]string, numRows)
+		if idx == 0 {
+			//Hydrate all
+		Inner1:
+			for i := 0; i < numRows; i++ {
+				subHolder[i] = s[cPos : cPos+1]
+				cPos++
+				if cPos >= len(s) {
+					break Inner1
+				}
+			}
+			holder = append(holder, subHolder)
+		} else {
+			//Hydrate only that position
+		Inner2:
+			for i := 0; i < numRows-1; i++ {
+				if i == idx {
+					subHolder[i] = s[cPos : cPos+1]
+					cPos++
+					if cPos >= len(s) {
+						break Inner2
+					}
+				} else {
+					subHolder[i] = ""
+				}
+			}
+			holder = append(holder, subHolder)
+		}
+		if idx == 0 && cPos < len(s) {
+			//Reset idx
+			idx = numRows - 2
+			continue
+		}
+		idx--
+		//cPos++
+		if cPos >= len(s) {
+			break
+		}
+	}
+
+	//Loop thru the subHolders and pick same spot letters and smush them together for the final word!
+	var sb strings.Builder
+	max := len(holder[0])
+	for j := 0; j < max; j++ {
+		for i := 0; i < len(holder); i++ {
+			item := holder[i][j]
+			if item != "" {
+				sb.WriteString(item)
+			}
+		}
+	}
+	fmt.Printf("sb.String(): %v\n", sb.String())
+	return sb.String()
+}
+
 func main() {
 	result := add(3, 7)
 	fmt.Println(result)
 	findSum()
-	reverseString("I am a man'")
-	reverseString("Tom Weds Anne")
+	reverseString("I am  a man'")
+	reverseString(" Hello  World   ")
 
 	fmt.Printf("Want 2 | Got %v  \n", removeDuplicates([]int{1, 1, 2}))
 	fmt.Printf("Want 5 | Got %v  \n", removeDuplicates([]int{0, 0, 1, 1, 1, 2, 2, 3, 3, 4}))
@@ -201,5 +303,17 @@ func main() {
 	fmt.Printf("Want  | Got %q \n", timeInWords(5, 28))
 	fmt.Println("----Kaprekar----")
 	kaprekarNumbers(1, 99999)
+
+	ReverseStringAnotherWay("the sky is blue")
+	ReverseStringAnotherWay("  hello world  ")
+	ReverseStringAnotherWay("a good   example")
+	fmt.Println("----Convert----")
+	convert("PAYPALISHIRING", 3)
+	convert("PAYPALISHIRING", 4)
+	convert("A", 2)
+	convert("AB", 2)
+	//convert("PAYPALISHIRING", 5)
+
+	TwoDSlices()
 
 }
